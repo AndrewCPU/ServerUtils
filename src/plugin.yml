@@ -1,0 +1,60 @@
+name: ServerUtils
+main: net.Andrewcpu.UTILS.Main
+version: 1.0
+commands:
+    setname:
+        permission: utils.setname
+    p:
+        permission: admin.*
+    setwarp:
+        permission: utils.setwarp
+    warp:
+        permission: utils.warp
+    gamemode:
+        permission: utils.gamemode
+        aliases: gm
+    heal:
+        permission: utils.heal
+    feed:
+        permission: utils.feed
+    fly:
+        permission: utils.fly
+    teleport:
+        permission: utils.tp
+        aliases: tp
+    teleporthere:
+        permission: utils.tphere
+        aliases: tphere
+    motd:
+        description: Message of The Day
+    sethome:
+        permission: utils.sethome
+        description: Set a home.
+    home:
+        permission: utils.home
+        description: Teleport home.
+    lightning:
+        permission: utils.lightning
+    god:
+        permission: utils.god
+    choose:
+        usage: /<command>
+    result:
+        usage: /<command>
+    give:
+        permission: utils.give
+        aliases: i
+    spawn:
+        permission: utils.spawn
+    setspawn:
+        permission: utils.setspawn
+    update:
+        permission: utils.update
+    ban:
+        permission: utils.ban
+    kick:
+        permission: utils.kick
+    unban:
+        permission: utils.unban
+        aliases: pardon
+

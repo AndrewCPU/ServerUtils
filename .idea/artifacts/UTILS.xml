@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="UTILS">
+    <output-path>$USER_HOME$/Desktop/</output-path>
+    <root id="archive" name="UTILS.jar">
+      <element id="module-output" name="ServerUtils" />
+    </root>
+  </artifact>
+</component>
