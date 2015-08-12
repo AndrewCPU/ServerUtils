@@ -1,5 +1,6 @@
 package net.Andrewcpu.UTILS.Commands;
 
+import net.Andrewcpu.UTILS.Commands.utils.Notifier;
 import net.Andrewcpu.UTILS.Commands.utils.UUIDFetcher;
 import net.Andrewcpu.UTILS.Main;
 import net.md_5.bungee.api.ChatColor;
@@ -9,9 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by andrewpstein on 8/12/15.
@@ -60,13 +59,13 @@ public class Ban implements CommandExecutor {
             p.kickPlayer(banMsg);
         }
         sender.sendMessage(ChatColor.GOLD + "Banned " + ChatColor.RED + (p==null ? args[0] : p.getName()) + ChatColor.YELLOW + " for: " + ChatColor.RESET + banMsg);
-        for(Player usrs : Bukkit.getOnlinePlayers())
-        {
-            if(usrs.hasPermission("utils.ban.view") || usrs.hasPermission("utils.ban"))
-            {
-                usrs.sendMessage(ChatColor.RED + sender.getName() + ChatColor.GOLD + " has banned " + ChatColor.RED + (p==null ? args[0] : p.getName()) + ChatColor.YELLOW + " for: " + ChatColor.RESET + banMsg);
-            }
-        }
+
+        List<String> perms = new ArrayList<>();
+        perms.add("utils.ban");
+        perms.add("utils.ban.view");
+
+        Notifier.notify(perms.toArray(), ChatColor.RED + sender.getName() + ChatColor.GOLD + " has banned " + ChatColor.RED + (p==null ? args[0] : p.getName()) + ChatColor.YELLOW + " for: " + ChatColor.RESET + banMsg);
+
         return true;
     }
 }

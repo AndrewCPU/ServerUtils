@@ -59,4 +59,11 @@ commands:
         aliases: pardon
     invsee:
         permission: utils.invsee
+    mute:
+        permission: utils.mute
+    unmute:
+        permission: utils.unmute
+    vanish:
+        permission: utils.vanish
+        aliases: v
 

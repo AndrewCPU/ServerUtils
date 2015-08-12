@@ -37,6 +37,7 @@ public class Main extends JavaPlugin implements Listener {
     public final static int COOLDOWN = 3;
     public final static String SERVER_NAME = "Andrewcpu's Server";
     public List<UUID> godMode = new ArrayList<>();
+    public List<UUID> vanished = new ArrayList<>();
     public void onEnable()
     {
         getServer().getPluginManager().registerEvents(this, this);
@@ -82,6 +83,10 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("unban").setExecutor(new Unban());
         getCommand("kick").setExecutor(new Kick());
         getCommand("invsee").setExecutor(new InventorySee());
+        getCommand("tpall").setExecutor(new TeleportAll());
+        getCommand("mute").setExecutor(new Mute());
+        getCommand("unmute").setExecutor(new Unmute());
+        getCommand("vanish").setExecutor(new Vanish());
         HashMap<String,String> choices = new HashMap<>();
         choices.put("A","Pasta");
         choices.put("B","Watermelon");
@@ -165,7 +170,18 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }, 1);
         }
-
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for(Player p : Bukkit.getOnlinePlayers())
+                {
+                    if(vanished.contains(p.getUniqueId()))
+                    {
+                        event.getPlayer().hidePlayer(p);
+                    }
+                }
+            }
+        }, 1);
         if(!isSetup(event.getPlayer().getUniqueId()))
         {
             setupPlayer(event.getPlayer().getUniqueId());
@@ -175,6 +191,9 @@ public class Main extends JavaPlugin implements Listener {
         event.getPlayer().setPlayerListName(ChatColor.translateAlternateColorCodes('&', getPlayerName(event.getPlayer())));
 
         Bukkit.dispatchCommand(event.getPlayer(), "motd");
+
+
+
     }
     @EventHandler
     public void onQuit(PlayerQuitEvent event)
