@@ -81,6 +81,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("ban").setExecutor(new Ban());
         getCommand("unban").setExecutor(new Unban());
         getCommand("kick").setExecutor(new Kick());
+        getCommand("invsee").setExecutor(new InventorySee());
         HashMap<String,String> choices = new HashMap<>();
         choices.put("A","Pasta");
         choices.put("B","Watermelon");
