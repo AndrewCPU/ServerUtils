@@ -19,7 +19,7 @@ public class Spawn implements CommandExecutor {
         Bukkit.getScheduler().scheduleSyncDelayedTask(Main.main, new Runnable() {
             @Override
             public void run() {
-                ((Player)sender).teleport((Player)((Player) sender).getWorld().getSpawnLocation());
+                ((Player)sender).teleport(((Player)sender).getWorld().getSpawnLocation());
                 sender.sendMessage(ChatColor.GOLD + "Teleporting...");
             }
         }, Main.COOLDOWN * 20);
