@@ -1,6 +1,8 @@
 package net.Andrewcpu.UTILS.Managers;
 
+import net.Andrewcpu.UTILS.Commands.Warp;
 import net.Andrewcpu.UTILS.Main;
+import net.Andrewcpu.UTILS.Managers.utils.WarpInformation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -35,6 +37,17 @@ public class WarpManager {
         }
         return false;
     }
+    public static List<WarpInformation> getAllWarps()
+    {
+        List<WarpInformation> informations = new ArrayList<>();
+        for(String s : Main.main.getConfig().getStringList("Warps"))
+        {
+            Location loc = getWarpLocation(s);
+            WarpInformation warpInformation = new WarpInformation(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ(),loc.getWorld().getName(), s);
+            informations.add(warpInformation);
+        }
+        return informations;
+    }
     public static void setWarpLocation(String warp, double x, double y, double z, float yaw, float pitch, World world)
     {
         Main main = Main.main;
@@ -55,5 +68,15 @@ public class WarpManager {
         main.saveConfig();
         main.reloadConfig();
 
+    }
+    public static void deleteWarp(String warp)
+    {
+        Main main = Main.main;
+        main.getConfig().set("Warp." + warp.toLowerCase(), null);
+        List<String> warps = main.getConfig().getStringList("Warps");
+        warps.remove(warp.toLowerCase());
+        main.getConfig().set("Warps",warps);
+        main.saveConfig();
+        main.reloadConfig();
     }
 }

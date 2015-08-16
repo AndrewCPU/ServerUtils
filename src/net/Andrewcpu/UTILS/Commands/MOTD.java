@@ -21,9 +21,9 @@ public class MOTD implements CommandExecutor {
         joinMessages.add(swordLeft + ChatColor.GOLD + " Welcome " + swordRight);
         joinMessages.add(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------------------------");
         joinMessages.add(ChatColor.GOLD + "Welcome to " + ChatColor.RED + Main.SERVER_NAME);
-        joinMessages.add(ChatColor.GOLD + "Spawn created by " + ChatColor.RED + "baileyboo910, sharkattack231, and Icarus101");
+        joinMessages.add(ChatColor.GOLD + "Spawn created by " + ChatColor.RED + "baileyboo910, sharkattack231, TheKronas, and Icarus101");
         joinMessages.add(ChatColor.GOLD + "Plugins developed by " + ChatColor.RED + "Andrewcpu");
-        joinMessages.add(ChatColor.GOLD + "Our Website: " + ChatColor.RED + "http://andrewcpu.net/");
+        joinMessages.add(ChatColor.GOLD + "Our Website: " + ChatColor.RED + Main.WEBSITE);
         joinMessages.add(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------------------------");
         joinMessages.add(swordLeft + ChatColor.GOLD + " Welcome " + swordRight);
         for(String s : joinMessages)

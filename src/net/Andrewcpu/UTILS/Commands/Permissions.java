@@ -31,6 +31,7 @@ public class Permissions implements CommandExecutor{
                     sender.sendMessage(ChatColor.GREEN + "Created the group " + ChatColor.RED + args[2]);
                     List<String> groups = main.getConfig().getStringList("Groups");
                     main.groups.add(main.permissionManager.createGroup(args[2]));
+                    groups.add(group.getName());
                     main.getConfig().set("Groups",groups);
                     main.saveConfig();
                     main.reloadConfig();

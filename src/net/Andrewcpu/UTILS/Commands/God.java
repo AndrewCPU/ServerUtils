@@ -16,7 +16,7 @@ public class God implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(args.length==0)
         {
-            if(Main.main.godMode.contains(commandSender.getName()))
+            if(Main.main.godMode.contains(((Player)commandSender).getUniqueId()))
             {
                 Main.main.godMode.remove(((Player)commandSender).getUniqueId());
             }

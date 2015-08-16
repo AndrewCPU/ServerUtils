@@ -28,7 +28,7 @@ public class TeleportAll implements CommandExecutor {
         perms.add("utils.tpall");
         perms.add("utils.tpall.view");
         Notifier.notify(perms.toArray(), ChatColor.RED + sender.getName() + " " + ChatColor.GOLD + " has teleported all players to them");
-        MuteManager.mute(p);
+       // MuteManager.mute(p);
 
         return true;
     }

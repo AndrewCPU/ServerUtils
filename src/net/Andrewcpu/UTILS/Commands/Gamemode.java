@@ -58,7 +58,7 @@ public class Gamemode implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Invalid GameMode.");
                     return true;
                 }
-                ((Player) sender).setGameMode(gameMode);
+                ((Player) p).setGameMode(gameMode);
                 sender.sendMessage(ChatColor.GOLD + "Set " + ChatColor.RED + p.getName() + "'s " + ChatColor.GOLD + " GameMode to " + ChatColor.RED + gameMode.toString().toLowerCase());
                 return true;
             }

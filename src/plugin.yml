@@ -66,4 +66,10 @@ commands:
     vanish:
         permission: utils.vanish
         aliases: v
+    tpall:
+        permission: utils.tpall
+    teleporter:
+        permission: utils.teleporter
+    delwarp:
+        permission: utils.delwarp
 

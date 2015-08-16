@@ -1,9 +1,15 @@
 package net.Andrewcpu.UTILS;
 
 import net.Andrewcpu.UTILS.Commands.*;
+import net.Andrewcpu.UTILS.Managers.MuteManager;
 import net.Andrewcpu.UTILS.Managers.PermissionManager;
 import net.Andrewcpu.UTILS.Managers.Permissions.Group;
 import net.Andrewcpu.UTILS.Managers.Permissions.PermissionPlayer;
+import net.Andrewcpu.UTILS.Managers.TeleporterManager;
+import net.Andrewcpu.UTILS.Managers.WarpManager;
+import net.Andrewcpu.UTILS.Managers.utils.Message.ActionBar;
+import net.Andrewcpu.UTILS.Managers.utils.Message.TabPlayer;
+import net.Andrewcpu.UTILS.Managers.utils.Message.TitlePlayer;
 import net.Andrewcpu.UTILS.Survey.Survey;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -16,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,6 +45,8 @@ public class Main extends JavaPlugin implements Listener {
     public final static String SERVER_NAME = "Andrewcpu's Server";
     public List<UUID> godMode = new ArrayList<>();
     public List<UUID> vanished = new ArrayList<>();
+    public static String WEBSITE = "http://andrewcpu.net/";
+    public static String SERVER_VERSION = "Beta 1.0.0";
     public void onEnable()
     {
         getServer().getPluginManager().registerEvents(this, this);
@@ -87,6 +96,9 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("mute").setExecutor(new Mute());
         getCommand("unmute").setExecutor(new Unmute());
         getCommand("vanish").setExecutor(new Vanish());
+        getCommand("teleporter").setExecutor(new JoinInventory());
+        getCommand("delwarp").setExecutor(new DelWarp());
+
         HashMap<String,String> choices = new HashMap<>();
         choices.put("A","Pasta");
         choices.put("B","Watermelon");
@@ -108,21 +120,40 @@ public class Main extends JavaPlugin implements Listener {
                     {
                         activeSurvey.send(p);
                     }
+                    TabPlayer player = new TabPlayer(p);
+                    player.sendTabTitle(ChatColor.GOLD + "Welcome to " + ChatColor.RED + SERVER_NAME, ChatColor.YELLOW + "" + ChatColor.BOLD + WEBSITE);
+
                 }
             }
         }, 0, 20 * 5 * 20);
 
     }
+    double highest = 0;
 
     @EventHandler
     public void onMove(PlayerMoveEvent event)
     {
+//        if(event.getPlayer().getName().equalsIgnoreCase("Andrewcpu"))
+//        {
+//            ActionBarAPI.send(event.getPlayer(), highest + "");
+//        }
+//        if(event.getPlayer().getVelocity().getY()<-0.189)
+//        {
+//            if(event.getPlayer().getVelocity().getY() < highest)
+//            {
+//                highest = event.getPlayer().getVelocity().getY();
+//            }
+//            Vector v = event.getPlayer().getVelocity();
+//            v.setX(event.getPlayer().getLocation().getDirection().getX());
+//            v.setZ(event.getPlayer().getLocation().getDirection().getZ());
+//            event.getPlayer().setVelocity(v);
+//        }
         if(event.getPlayer().getLocation().getBlock().getType()== Material.STONE_PLATE)
         {
             if(event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType()==Material.REDSTONE_BLOCK)
             {
                 //Vector v = new Vector(event.getPlayer().getLocation().getDirection().getX(),1,event.getPlayer().getLocation().getDirection().getZ());
-                event.getPlayer().setVelocity(event.getPlayer().getLocation().getDirection().add(new Vector(0, .5, 0)).multiply(new Vector(20, 20, 20)));
+                event.getPlayer().setVelocity(event.getPlayer().getLocation().getDirection().add(new Vector(0, .5, 0)).multiply(new Vector(20, 3, 20)));
             }
         }
         if(getBelowBlock(event.getPlayer()).getType()==Material.WOOL)
@@ -160,12 +191,21 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
-
+        if(event.getPlayer().getName().equalsIgnoreCase("Andrewcpu"))
+        {
+            event.setJoinMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "Your new God is here. " + ChatColor.GOLD + event.getPlayer().getName() + " has joined.");
+        }
+        else
+        {
+            event.setJoinMessage(ChatColor.BLUE + "" + ChatColor.BOLD + ">" + ChatColor.GOLD + "" + ChatColor.BOLD + ">" + ChatColor.RED + " +" + ChatColor.GRAY + event.getPlayer().getName());
+        }
         if(getConfig().isSet("Ban." + event.getPlayer().getUniqueId().toString()))
         {
+            event.setJoinMessage(null);
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                 @Override
                 public void run() {
+
                   event.getPlayer().kickPlayer(getConfig().getString("Ban." + event.getPlayer().getUniqueId().toString()));
                 }
             }, 1);
@@ -191,7 +231,19 @@ public class Main extends JavaPlugin implements Listener {
         event.getPlayer().setPlayerListName(ChatColor.translateAlternateColorCodes('&', getPlayerName(event.getPlayer())));
 
         Bukkit.dispatchCommand(event.getPlayer(), "motd");
+        ActionBar actionBar = new ActionBar(event.getPlayer(), ChatColor.WHITE + "Server Version: " + SERVER_VERSION);
+        actionBar.sendPlayerAnnouncement();
 
+        TabPlayer player = new TabPlayer(event.getPlayer());
+        player.sendTabTitle(ChatColor.GOLD + "Welcome to " + ChatColor.RED + SERVER_NAME, ChatColor.YELLOW + "" + ChatColor.BOLD + WEBSITE);
+
+        TitlePlayer titlePlayer = new TitlePlayer(event.getPlayer());
+        titlePlayer.sendTitle(5 * 20,100,5 * 20,ChatColor.YELLOW + "" + ChatColor.BOLD + SERVER_NAME.toUpperCase(), ChatColor.BLUE + "The Server of Random / Upsetting Minigames");
+
+
+
+
+        // ActionBarAPI.send(event.getPlayer(), ChatColor.GOLD + "Welcome to " + ChatColor.RED +  SERVER_NAME);
 
 
     }
@@ -200,12 +252,16 @@ public class Main extends JavaPlugin implements Listener {
     {
         removePermissionAttachment(event.getPlayer());
         unloadPlayer(event.getPlayer());
+        event.setQuitMessage(ChatColor.BLUE + "" + ChatColor.BOLD + ">" + ChatColor.GOLD + "" + ChatColor.BOLD + ">" + ChatColor.RED + " -" + ChatColor.GRAY + event.getPlayer().getName());
+
     }
     @EventHandler
     public void onKick(PlayerKickEvent event)
     {
         removePermissionAttachment(event.getPlayer());
         unloadPlayer(event.getPlayer());
+        event.setLeaveMessage(ChatColor.BLUE + "" + ChatColor.BOLD + ">" + ChatColor.GOLD + "" + ChatColor.BOLD + ">" + ChatColor.RED + " -" + ChatColor.GRAY + event.getPlayer().getName());
+
     }
     public void removePermissionAttachment(Player p)
     {
@@ -244,6 +300,7 @@ public class Main extends JavaPlugin implements Listener {
         List<String> permissions = new ArrayList<>();
         permissions.add("permissions.use");
         getConfig().set("Player." + uuid.toString()  + ".Permissions", permissions);
+        getConfig().set("Player." + uuid.toString() + ".Group", "default");
         saveConfig();
         reloadConfig();
     }
@@ -308,13 +365,12 @@ public class Main extends JavaPlugin implements Listener {
         prefix = ChatColor.translateAlternateColorCodes('&', prefix);
         suffix = ChatColor.translateAlternateColorCodes('&',suffix);
         event.setFormat(prefix + getPlayerName(event.getPlayer()) + suffix + ChatColor.GRAY + ": " + color + event.getMessage());
+        if(MuteManager.isMuted(event.getPlayer()))
+        {
+            event.getPlayer().sendMessage(ChatColor.GOLD + "You are muted. You may not speak.");
+            event.setCancelled(true);
+        }
     }
-
-
-
-
-
-
 
     public String getPlayerName(Player p)
     {
@@ -372,6 +428,36 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
     Survey activeSurvey = null;
+
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event)
+    {
+        if(event.getPlayer().getItemInHand()!=null)
+        {
+            if(event.getPlayer().getItemInHand().getType()==Material.DRAGON_EGG)
+            {
+                TeleporterManager.openTeleporter(event.getPlayer());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event)
+    {
+        if(event.getCurrentItem()!=null)
+        {
+            if(event.getCurrentItem().getType()==Material.CHEST)
+            {
+                if(event.getInventory().getTitle().contains("Teleporter"))
+                {
+                    String warp = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName().replaceAll(" ", "_"));
+                    event.getWhoClicked().closeInventory();
+                    event.getWhoClicked().teleport(WarpManager.getWarpLocation(warp));
+                }
+            }
+        }
+    }
 
     @Override
     public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {

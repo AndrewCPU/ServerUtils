@@ -1,6 +1,7 @@
 package net.Andrewcpu.UTILS.Managers.Permissions;
 
 import net.Andrewcpu.UTILS.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class PermissionPlayer {
         Main.main.saveConfig();
         Main.main.reloadConfig();
         applyPermissions();
+//        ActionBarAPI.send(Bukkit.getPlayer(uuid), "Your group has been set to " + getGroup().getName());
     }
 
 
@@ -54,6 +56,16 @@ public class PermissionPlayer {
                 if(!hasPermission(s))
                 {
                     getPermissionAttachment().setPermission(s, true);
+                }
+            }
+            for(Group g : getGroup().getInherited())
+            {
+                for(String s : g.getPermissions())
+                {
+                    if(!getPermissionAttachment().getPermissions().containsKey(s))
+                    {
+                        getPermissionAttachment().setPermission(s, true);
+                    }
                 }
             }
         }

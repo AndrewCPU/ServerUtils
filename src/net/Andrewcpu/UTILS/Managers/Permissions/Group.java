@@ -2,6 +2,7 @@ package net.Andrewcpu.UTILS.Managers.Permissions;
 
 import net.Andrewcpu.UTILS.Main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,30 @@ public class Group
         return permissions;
     }
 
+    public void inherit(Group g)
+    {
+        List<String> strings = Main.main.getConfig().getStringList("Group." + getName() + ".Inherited");
+        if(!strings.contains(g.getName()))
+        {
+            strings.add(g.getName());
+        }
+        Main.main.getConfig().set("Group." + getName() + ".Inhertited",strings);
+        Main.main.saveConfig();
+        Main.main.reloadConfig();
+    }
+
+    public List<Group> getInherited()
+    {
+        List<Group> groups = new ArrayList<>();
+        for(Group g : Main.main.groups)
+        {
+            if(Main.main.getConfig().getStringList("Group." + getName() + ".Inherited").contains(g.getName()))
+            {
+                groups.add(g);
+            }
+        }
+        return groups;
+    }
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
         Main.main.getConfig().set("Group." + name + ".Permissions",permissions);
@@ -96,8 +121,11 @@ public class Group
                 {
                     p.applyPermissions();
                 }
+                if(p.getGroup().getInherited().contains(this))
+                {
+                    p.applyPermissions();
+                }
             }
-
         }
     }
     public boolean hasPermission(String permission)
